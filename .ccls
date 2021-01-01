@@ -1,14 +1,14 @@
-clang
+/home/jeff/.platformio/packages/toolchain-xtensa/bin/xtensa-lx106-elf-g++
 
-%c -std=c99
-%cpp -std=c++11
+%c -std=gnu99 -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -Os -mlongcalls -mtext-section-literals -falign-functions=4 -U__STRICT_ANSI__ -ffunction-sections -fdata-sections -fno-exceptions -Wall
+%cpp -fno-rtti -std=c++11 -Os -mlongcalls -mtext-section-literals -falign-functions=4 -U__STRICT_ANSI__ -ffunction-sections -fdata-sections -fno-exceptions -Wall
 
--I/home/jeff/Dropbox/workspace/thermometer/include
--I/home/jeff/Dropbox/workspace/thermometer/src
+-I/home/jeff/Dropbox/workspace/motes/thermometer/include
+-I/home/jeff/Dropbox/workspace/motes/thermometer/src
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266HTTPClient/src
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src
--I/home/jeff/Dropbox/workspace/thermometer/.pio/libdeps/esp12e/DallasTemperature_ID54
--I/home/jeff/Dropbox/workspace/thermometer/.pio/libdeps/esp12e/OneWire_ID1
+-I/home/jeff/Dropbox/workspace/motes/thermometer/.pio/libdeps/esp12e/DallasTemperature_ID54
+-I/home/jeff/Dropbox/workspace/motes/thermometer/.pio/libdeps/esp12e/OneWire_ID1
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/tools/sdk/libc/xtensa-lx106-elf/include
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/cores/esp8266
@@ -41,14 +41,14 @@ clang
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/libraries/Ticker/src
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/libraries/Wire
 -I/home/jeff/.platformio/packages/framework-arduinoespressif8266/libraries/esp8266/src
--I/home/jeff/.platformio/packages/toolchain-xtensa/xtensa-lx106-elf/include
 -I/home/jeff/.platformio/packages/toolchain-xtensa/xtensa-lx106-elf/include/c++/4.8.2
 -I/home/jeff/.platformio/packages/toolchain-xtensa/xtensa-lx106-elf/include/c++/4.8.2/xtensa-lx106-elf
--I/home/jeff/.platformio/packages/toolchain-xtensa/lib/gcc/xtensa-lx106-elf/4.8.2/include
 -I/home/jeff/.platformio/packages/toolchain-xtensa/lib/gcc/xtensa-lx106-elf/4.8.2/include-fixed
+-I/home/jeff/.platformio/packages/toolchain-xtensa/lib/gcc/xtensa-lx106-elf/4.8.2/include
+-I/home/jeff/.platformio/packages/toolchain-xtensa/xtensa-lx106-elf/include
 -I/home/jeff/.platformio/packages/tool-unity
 
--DPLATFORMIO=40100
+-DPLATFORMIO=50004
 -DESP8266
 -DARDUINO_ARCH_ESP8266
 -DARDUINO_ESP8266_ESP12
@@ -56,7 +56,7 @@ clang
 -D__ets__
 -DICACHE_FLASH
 -DARDUINO=10805
--DARDUINO_BOARD=&quot;PLATFORMIO_ESP12E&quot;
+-DARDUINO_BOARD="PLATFORMIO_ESP12E"
 -DFLASHMODE_DIO
 -DLWIP_OPEN_SRC
 -DNONOSDK22x_190703=1

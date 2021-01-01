@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "credentials.h"
 #include <DallasTemperature.h>
 #include <ESP8266HTTPClient.h>
