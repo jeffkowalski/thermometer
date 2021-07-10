@@ -17,7 +17,7 @@ DallasTemperature sensors (&oneWire);
 // Number of temperature devices found
 int numberOfDevices = 0;
 
-#define SERVER "carbon.local:8086"
+#define SERVER "cube.local:8086"
 
 class Blinker {
     const int           led = D4;
