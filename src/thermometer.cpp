@@ -17,7 +17,7 @@ DallasTemperature sensors (&oneWire);
 // Number of temperature devices found
 int numberOfDevices = 0;
 
-#define SERVER "cube.local:8086"
+#define SERVER "192.168.7.207:8086"  // address of influx database
 
 class Blinker {
     const int           led = D4;
