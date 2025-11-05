@@ -1,8 +1,9 @@
-#include <Arduino.h>
 #include "credentials.h"
+#include <Arduino.h>
 #include <DallasTemperature.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
 
 // Data wire is plugged TO GPIO 4
 #define ONE_WIRE_BUS 4
@@ -17,7 +18,8 @@ DallasTemperature sensors (&oneWire);
 // Number of temperature devices found
 int numberOfDevices = 0;
 
-#define SERVER "192.168.7.207:8086"  // address of influx database
+#define SERVER   "192.168.7.207:8086"  // address of influx database
+#define HOSTNAME "thermometer"         // mDNS hostname
 
 class Blinker {
     const int           led = D4;
@@ -25,18 +27,19 @@ class Blinker {
     const unsigned long interval = 1000;  // interval at which to blink (milliseconds)
 
   public:
-    Blinker() : previousMillis (0) {
+    Blinker()
+        : previousMillis (0) {
         pinMode (led, OUTPUT);
     }
 
-    void blink() {
+    void blink () {
         digitalWrite (led, LOW);
         delay (100);
         digitalWrite (led, HIGH);
         delay (100);
     }
 
-    void update() {
+    void update () {
         unsigned long currentMillis = millis();
         if (currentMillis - previousMillis >= interval) {
             //        Serial.println("blink");
@@ -59,7 +62,7 @@ void stringifyAddress (DeviceAddress deviceAddress, char * deviceAddressString) 
              deviceAddress[0]);
 }
 
-void setup() {
+void setup () {
     // start serial port
     Serial.begin (115200);
 
@@ -77,15 +80,24 @@ void setup() {
             char deviceAddressString[17];
             stringifyAddress (deviceAddress, deviceAddressString);
             Serial.printf ("Found device %d with address 0x%s\n", ii, deviceAddressString);
-        } else {
-            Serial.printf ("Found ghost device at %d but could not detect address. Check power and cabling\n", ii);
         }
+        else
+            Serial.printf ("Found ghost device at %d but could not detect address. Check power and cabling\n", ii);
     }
 
     Serial.print ("Connecting WiFi");
     WiFi.begin (WIFI_SSID, WIFI_PSK);  // defined in credentials.h
     WiFi.waitForConnectResult();       // so much neater than those stupid loops and dots
     Serial.println (WiFi.localIP());
+
+    // Set hostname for DHCP
+    WiFi.hostname (HOSTNAME);
+
+    // Initialize mDNS
+    if (MDNS.begin (HOSTNAME))
+        Serial.printf ("mDNS responder started: %s.local\n", HOSTNAME);
+    else
+        Serial.println ("Error setting up mDNS responder!");
 
     Blinker.blink();
 }
@@ -114,9 +126,12 @@ void record_to_database (int device_id, char const * device_address, float tempF
     http.end();
 }
 
-void loop() {
+void loop () {
     if (WiFi.status() != WL_CONNECTED)
         ESP.restart();
+
+    // Update mDNS responder
+    MDNS.update();
 
     sensors.requestTemperatures();  // Send the command to get temperatures
     Blinker.blink();
